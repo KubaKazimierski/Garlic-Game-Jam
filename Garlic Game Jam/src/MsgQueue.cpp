@@ -44,6 +44,11 @@ void MsgQueue::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
+void MsgQueue::clear()
+{
+	Messeges.clear();
+}
+
 MsgQueue::~MsgQueue()
 {
 }

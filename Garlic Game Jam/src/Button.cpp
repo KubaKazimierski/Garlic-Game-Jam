@@ -68,9 +68,16 @@ void Button::update(const sf::Window& window)
 	}
 }
 
+void Button::setText(std::string name)
+{
+	Text.setString(name);
+	Text.setPosition(Rect.left + Rect.width / 2 - Text.getGlobalBounds().width / 2,
+		Rect.top + Rect.height / 2 - Text.getGlobalBounds().height);
+}
+
 bool Button::isClicked()
 {
-	if(onMouse && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	if(onMouse && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !locked)
 	{
 		return true;
 	}

@@ -22,34 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#include <SFML/Graphics.hpp>
 #include <string>
-#include <sstream>
 #include <vector>
 
-class MsgQueue : public sf::Drawable
+enum Event : int
 {
-public:
-	MsgQueue(sf::FloatRect, sf::Font&, unsigned);
-	~MsgQueue();
-	
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-	struct Manipulator{};
-	static const Manipulator flush;
-
-	void clear();
-
-	MsgQueue& operator<<(std::string);
-	MsgQueue& operator<<(int);
-	MsgQueue& operator<<(Manipulator);
-
-private:
-	sf::Font& Font;
-	sf::FloatRect Rect;
-	std::vector<std::string> Messeges;
-	std::stringstream NewMsg;
-
-	unsigned CharSize;
+	None,
+	Travel, //a.k.a. fighting event
+	Planet, // a.k.a. fighting event
+	Shop, // two types of shop: military and civilian
+	Merchant, //Random upgrade
+	GameOver,
+	GameWon
 };
+
+extern const std::vector<std::string> TravelEvents;
+extern const std::vector<std::string> PlanetEvents;
+extern const std::vector<std::string> Shops;
+extern const std::vector<std::string> Merchants;

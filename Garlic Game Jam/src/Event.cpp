@@ -22,34 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#include <SFML/Graphics.hpp>
-#include <string>
-#include <sstream>
-#include <vector>
+#include "Event.hpp"
 
-class MsgQueue : public sf::Drawable
-{
-public:
-	MsgQueue(sf::FloatRect, sf::Font&, unsigned);
-	~MsgQueue();
-	
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+const std::vector<std::string> TravelEvents = {
+	"You are attacked by pirates!",
+	"You are attacked by space amoeba!",
+	"Big asteroid is in front of you!"
+};
 
-	struct Manipulator{};
-	static const Manipulator flush;
+const std::vector<std::string> PlanetEvents = {
+	"You are attacked by a sand worm!",
+	"You are attacked by a enormous sloth!",
+	"Giant is going to crash you w their foot!"
+};
 
-	void clear();
+const std::vector<std::string> Shops = {
+	"Welcome to the civilian shop!",
+	"Welcome to the military shop!",
+	"Welcome to the mechanic!"
+};
 
-	MsgQueue& operator<<(std::string);
-	MsgQueue& operator<<(int);
-	MsgQueue& operator<<(Manipulator);
-
-private:
-	sf::Font& Font;
-	sf::FloatRect Rect;
-	std::vector<std::string> Messeges;
-	std::stringstream NewMsg;
-
-	unsigned CharSize;
+const std::vector<std::string> Merchants = {
+	"Merchant: It is uncommon to meet living soul in this area.\n"
+	"          Do you want to take a look at my offer?"
 };

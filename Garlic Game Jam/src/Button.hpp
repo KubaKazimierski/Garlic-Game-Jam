@@ -37,6 +37,7 @@ public:
 	void update(const sf::Window& window);
 	void lock();
 	void unlock();
+	void setText(std::string);
 	bool isClicked();
 private:
 	sf::FloatRect Rect;

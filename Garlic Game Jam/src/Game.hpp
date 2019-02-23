@@ -23,15 +23,16 @@ SOFTWARE.
 */
 
 #pragma once
+#include "Button.hpp"
+#include "MsgQueue.hpp"
+#include "Star.hpp"
+#include "Stats.hpp"
+#include "Event.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
 #include <memory>
 #include <random>
-#include "Button.hpp"
-#include "MsgQueue.hpp"
-#include "Star.hpp"
-#include "Stats.hpp"
 
 class Game
 {
@@ -43,7 +44,8 @@ private:
 	enum Buttons : int
 	{
 		NewTurn = 0,
-		Options
+		Option1,
+		Option2
 	};
 
 	static const sf::Time ButtonDelay;
@@ -62,10 +64,18 @@ private:
 	std::unique_ptr<MsgQueue> Messeges;
 
 	Stats PlayerStats;
+	Event CurrentEvent = None;
 
 	int ppos = 0, 
 	    tpos = -1,
-	    ttime = 0;
+	    ttime = 0,
+	    EventVariant = -1,
+	    Offer[5] = { 0, 0, 0, 0, 0 },
+	    HPrecovery = 0;
+	bool MsgShown = false;
+
+	void init();
+	void clear();
 
 	//Main functions
 	void update();
@@ -81,4 +91,24 @@ private:
 
 	//Map functions
 	void generateMap();
+
+	//Event functions
+	void performEvent();
+	void showEventMsg();
+	void resetEvent();
+
+	void attack();
+	void flee();
+
+	////Shops:
+	void merchant();
+	void civilianShop();
+	void mechanic();
+	void militaryShop();
+	void buyOffer();
+
+	//Helpers
+	void lockButtons();
+	void printOffer();
+
 };
