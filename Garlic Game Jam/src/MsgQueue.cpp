@@ -36,7 +36,7 @@ void MsgQueue::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	sf::Text text{"", Font, CharSize};
 	text.setPosition(Rect.left, Rect.top);
 
-	for(int i = 0; i < Messeges.size(); ++i)
+	for(size_t i = 0; i < Messeges.size(); ++i)
 	{
 		text.setPosition(text.getPosition().x, text.getPosition().y + CharSize);
 		text.setString(Messeges.at(i));
@@ -77,7 +77,7 @@ MsgQueue& MsgQueue::operator<<(Manipulator)
 
 		if(tmp.size() >= Rect.width)
 		{
-			tmp.erase(tmp.begin() + Rect.width - 1, tmp.end());
+			tmp.erase(tmp.begin() + static_cast<int>(Rect.width) - 1, tmp.end());
 		}
 
 		if(tmp != "")

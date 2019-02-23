@@ -77,7 +77,7 @@ void Game::init()
 		"Your goal is to earn 1000$.\n"
 		"Enjoy yourself while playing!\n"
 		"-- INFO --\n"
-		"Click Escape key on your keyboard to exit game.\n"
+		"Click Escape to exit game.\n"
 		"To start game choose your destination on the map and click next turn.\n"
 		"----------\n"
 		<< MsgQueue::flush;
@@ -87,7 +87,7 @@ void Game::clear()
 {
 	Buttons.clear();
 	Map.clear();
-	Event CurrentEvent = None;
+	CurrentEvent = None;
 
 	ppos = 0;
 	tpos = -1;
@@ -96,8 +96,6 @@ void Game::clear()
 
 	PlayerStats = Stats{};
 	bool MsgShown = false;
-
-	CurrentEvent = None;
 }
 
 void Game::start()
@@ -327,7 +325,6 @@ void Game::performEvent()
 			*Messeges << "You departed from the merchant." << MsgQueue::flush;
 
 			lockButtons();
-
 			resetEvent();
 		}
 		
@@ -350,6 +347,7 @@ void Game::performEvent()
 		else if(Buttons[Option2].isClicked())
 		{
 			*Messeges << "You departed from the store." << MsgQueue::flush;
+
 			lockButtons();
 			resetEvent();
 		}
@@ -363,12 +361,16 @@ void Game::performEvent()
 		if(Buttons[Option1].isClicked())
 		{
 			attack();
+
 			lockButtons();
+			resetEvent();
 		}	
 		else if(Buttons[Option2].isClicked())
 		{
 			flee();
+
 			lockButtons();
+			resetEvent();
 		}
 			
 	} break;
@@ -379,6 +381,7 @@ void Game::performEvent()
 		{
 			clear();
 			init();
+
 			lockButtons();
 		}
 		else if(Buttons[Option2].isClicked())
@@ -550,8 +553,6 @@ void Game::attack()
 	{
 		*Messeges << "Enemy fled!\n" << MsgQueue::flush;
 	}
-
-	resetEvent();
 }
 
 void Game::flee()
@@ -559,7 +560,7 @@ void Game::flee()
 	std::random_device rd;
 	std::uniform_int_distribution<int> dist(0, 100);
 
-	int result = dist(rd) + 50 + PlayerStats.Speed - dist(rd) - PlayerStats.Defense;
+	int result = dist(rd) + 40 + PlayerStats.Speed - dist(rd) - PlayerStats.Defense;
 
 	if(result < 0)
 	{
@@ -583,13 +584,11 @@ void Game::flee()
 	{
 		*Messeges << "You sucessfully fled!\n" << MsgQueue::flush;
 	}
-
-	resetEvent();
 }
 
 void Game::buyOffer()
 {
-	if(PlayerStats.Money >= Offer[0])
+	if(static_cast<int>(PlayerStats.Money) >= Offer[0])
 	{
 		PlayerStats.Money -= Offer[0];
 
