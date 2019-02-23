@@ -25,30 +25,29 @@ SOFTWARE.
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
-#include <memory>
-#include "Button.hpp"
-#include "MsgQueue.hpp"
+#include <sstream>
+#include <vector>
 
-class Game
+class MsgQueue : public sf::Drawable
 {
 public:
-	Game();
-	void start();
-	~Game();
+	MsgQueue(sf::FloatRect, sf::Font&, unsigned);
+	~MsgQueue();
+	
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+	struct Manipulator{};
+	static const Manipulator endl;
+
+	MsgQueue& operator<<(std::string);
+	MsgQueue& operator<<(int);
+	MsgQueue& operator<<(Manipulator);
+
 private:
-	sf::RenderWindow Window;
-	sf::Font MainFont;
-	std::unique_ptr<MsgQueue> MessegesPtr;
-	MsgQueue& Messeges;
+	sf::Font& Font;
+	sf::FloatRect Rect;
+	std::vector<std::string> Messeges;
+	std::stringstream NewMsg;
 
-	//Main functions
-	void update();
-	void handleEvents();
-	void draw();
-
-	//Draw functions
-	void drawFrame(sf::FloatRect, std::string);
-	void drawMap();
-	void drawStatus();
-	void drawMsgBox();
+	unsigned CharSize;
 };

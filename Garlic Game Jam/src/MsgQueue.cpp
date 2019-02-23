@@ -22,33 +22,62 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-#include <SFML/Graphics.hpp>
-#include <string>
-#include <memory>
-#include "Button.hpp"
 #include "MsgQueue.hpp"
 
-class Game
+const MsgQueue::Manipulator MsgQueue::endl;
+
+MsgQueue::MsgQueue(sf::FloatRect rect, sf::Font& font, unsigned charSize)
+	: Rect{ rect }, Font{ font }, CharSize{ charSize }
 {
-public:
-	Game();
-	void start();
-	~Game();
-private:
-	sf::RenderWindow Window;
-	sf::Font MainFont;
-	std::unique_ptr<MsgQueue> MessegesPtr;
-	MsgQueue& Messeges;
+}
 
-	//Main functions
-	void update();
-	void handleEvents();
-	void draw();
+void MsgQueue::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	sf::Text text{"", Font, CharSize};
+	text.setPosition(Rect.left, Rect.top);
 
-	//Draw functions
-	void drawFrame(sf::FloatRect, std::string);
-	void drawMap();
-	void drawStatus();
-	void drawMsgBox();
-};
+	for(int i = 0; i < Messeges.size(); ++i)
+	{
+		text.setPosition(text.getPosition().x, text.getPosition().y + CharSize);
+		text.setString(Messeges.at(i));
+		target.draw(text, states);
+	}
+}
+
+MsgQueue::~MsgQueue()
+{
+}
+
+MsgQueue& MsgQueue::operator<<(std::string string)
+{
+	NewMsg << string;
+	return *this;
+}
+
+MsgQueue& MsgQueue::operator<<(int n)
+{
+	NewMsg << n;
+	return *this;
+}
+
+MsgQueue& MsgQueue::operator<<(Manipulator)
+{
+	NewMsg << '\n';
+
+	std::string tmp;
+	std::getline(NewMsg, tmp);
+
+	if(tmp.size() >= Rect.width)
+	{
+		tmp.erase(tmp.begin() + Rect.width - 1, tmp.end());
+	}
+
+	Messeges.push_back(tmp);
+
+	if(Messeges.size() >= Rect.height)
+	{
+		Messeges.erase(Messeges.begin());
+	}
+
+	return *this;
+}

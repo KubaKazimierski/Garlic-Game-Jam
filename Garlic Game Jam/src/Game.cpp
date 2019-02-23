@@ -25,9 +25,15 @@ SOFTWARE.
 #pragma once
 #include "Game.hpp"
 
-Game::Game() : Window{ sf::VideoMode{960, 540}, "Monochrome Space", sf::Style::Titlebar | sf::Style::Close }
+Game::Game() : Window{ sf::VideoMode{960, 540}, "Monochrome Space", sf::Style::Titlebar | sf::Style::Close },
+	       Messeges{ MessegesPtr }
 {
 	MainFont.loadFromFile("assets\\LCD_Solid.ttf");
+
+	auto WindowSize = Window.getSize();
+	Messeges = std::make_unique<MsgQueue>(sf::FloatRect{ static_cast<float>(WindowSize.x) * 0.4f + 50.0f, 110.0f,
+		(static_cast<float>(WindowSize.x) - static_cast<float>(WindowSize.x) * 0.4f - 40) / 12.5f, 10 },
+		MainFont, 20);
 }
 
 void Game::start()
@@ -50,6 +56,7 @@ void Game::start()
 
 void Game::update()
 {
+	
 }
 
 void Game::handleEvents()
@@ -137,6 +144,8 @@ void Game::drawMsgBox()
 		220.f
 	};
 	drawFrame(Rect);
+
+	Window.draw(Messeges);
 }
 
 Game::~Game()

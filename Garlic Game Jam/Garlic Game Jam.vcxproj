@@ -22,10 +22,12 @@
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MsgQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Button.hpp" />
     <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\MsgQueue.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\LCD_Solid.ttf" />
