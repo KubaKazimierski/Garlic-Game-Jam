@@ -30,6 +30,6 @@ struct Stats
 		Hp = 10,
 		Money = 100,
 		Attack = 10,
-		Defence = 10,
+		Defense = 10,
 		Speed = 1;
 };

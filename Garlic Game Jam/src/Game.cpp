@@ -28,8 +28,8 @@ SOFTWARE.
 const sf::Time Game::ButtonDelay = sf::milliseconds(200);
 
 Game::Game() 
-	: Window{ sf::VideoMode{960, 540},
-	"Monochrome Space", sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen }
+	: Window{ sf::VideoMode{1960, 1040},
+	"Monochrome Space", sf::Style::Titlebar | sf::Style::Close /*| sf::Style::Fullscreen*/ }
 {
 	SpriteSheet.loadFromFile("assets\\spritesheet.png");
 	MainFont.loadFromFile("assets\\LCD_Solid.ttf");
@@ -58,7 +58,7 @@ void Game::start()
 	const sf::Time frameStep = sf::milliseconds(1000/60);
 	sf::Clock MainClock;
 	
-	*Messeges << "Welcome to Monochrome Space!\nYour goal is to earn 10000$.\n"
+	*Messeges << "Welcome to Monochrome Space!\nYour goal is to earn 1000000$.\n"
 		<< "Enjoy yourself while playing it!"
 		<< MsgQueue::flush;
 
@@ -157,7 +157,7 @@ void Game::handleEvents()
 			Map.at(i)->select();
 			tpos = i;
 			ttime = static_cast<int>(ceil(sqrt(pow(Map.at(i)->getPos().x - Map.at(ppos)->getPos().x, 2)
-				+ pow(Map.at(i)->getPos().x - Map.at(ppos)->getPos().y, 2)) / 100));
+				+ pow(Map.at(i)->getPos().y - Map.at(ppos)->getPos().y, 2)) / 100));
 
 			*Messeges << "Travel to this star is going to take " << ttime
 				<< " turns." << MsgQueue::flush;
@@ -234,12 +234,19 @@ void Game::drawMap()
 
 void Game::drawStatus()
 {
+	std::stringstream stringGen;
+
+	//HP Bar
+	stringGen << "HP: " << PlayerStats.Hp << '/' << PlayerStats.MaxHp << '\n';
+
+	std::string title; getline(stringGen, title);
+
 	auto WindowSize = Window.getSize();
 	sf::FloatRect Rect{ static_cast<float>(WindowSize.x) * 0.4f + 30.0f, 50.0f,
 		static_cast<float>(WindowSize.x) - static_cast<float>(WindowSize.x) * 0.4f - 40,
 		50.f
 	};
-	drawFrame(Rect, "HP");
+	drawFrame(Rect, title);
 
 	sf::RectangleShape Bar;
 	Bar.setSize(sf::Vector2f{ (Rect.width - 30) * (PlayerStats.Hp / PlayerStats.MaxHp), Rect.height - 30 });
@@ -247,6 +254,17 @@ void Game::drawStatus()
 	Bar.setFillColor(sf::Color::White);
 
 	Window.draw(Bar);
+
+	//Rest of stats
+	stringGen << "Money:" << PlayerStats.Money << '$'
+		<< " Attack:" << PlayerStats.Attack
+		<< " Defense:" << PlayerStats.Defense
+		<< " Speed:" << PlayerStats.Speed << '\n';
+	getline(stringGen, title);
+	sf::Text StatDisplay{ title, MainFont, 30 };
+	StatDisplay.setPosition(static_cast<float>(WindowSize.x) * 0.4f + 30.0f, 550.0f);
+	Window.draw(StatDisplay);
+
 }
 
 void Game::drawMsgBox()
