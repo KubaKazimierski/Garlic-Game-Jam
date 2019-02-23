@@ -37,7 +37,7 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	struct Manipulator{};
-	static const Manipulator endl;
+	static const Manipulator flush;
 
 	MsgQueue& operator<<(std::string);
 	MsgQueue& operator<<(int);

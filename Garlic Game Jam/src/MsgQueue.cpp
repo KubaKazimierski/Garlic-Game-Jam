@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "MsgQueue.hpp"
 
-const MsgQueue::Manipulator MsgQueue::endl;
+const MsgQueue::Manipulator MsgQueue::flush;
 
 MsgQueue::MsgQueue(sf::FloatRect rect, sf::Font& font, unsigned charSize)
 	: Rect{ rect }, Font{ font }, CharSize{ charSize }
@@ -65,19 +65,27 @@ MsgQueue& MsgQueue::operator<<(Manipulator)
 	NewMsg << '\n';
 
 	std::string tmp;
-	std::getline(NewMsg, tmp);
 
-	if(tmp.size() >= Rect.width)
+	do
 	{
-		tmp.erase(tmp.begin() + Rect.width - 1, tmp.end());
-	}
+		std::getline(NewMsg, tmp);
 
-	Messeges.push_back(tmp);
+		if(tmp.size() >= Rect.width)
+		{
+			tmp.erase(tmp.begin() + Rect.width - 1, tmp.end());
+		}
 
-	if(Messeges.size() >= Rect.height)
-	{
-		Messeges.erase(Messeges.begin());
+		if(tmp != "")
+			Messeges.push_back(tmp);
+
+		if(Messeges.size() >= Rect.height)
+		{
+			Messeges.erase(Messeges.begin());
+		}
 	}
+	while(!NewMsg.eof());
+	NewMsg.clear();
+	
 
 	return *this;
 }

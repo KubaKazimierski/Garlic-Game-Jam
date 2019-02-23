@@ -24,48 +24,28 @@ SOFTWARE.
 
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <string>
-#include <vector>
-#include <memory>
-#include <random>
-#include "Button.hpp"
-#include "MsgQueue.hpp"
-#include "Star.hpp"
 
-class Game
+class Star : public sf::Drawable
 {
 public:
-	Game();
-	void start();
-	~Game();
+	Star(sf::Image&, sf::Vector2f, sf::Vector2f);
+	~Star();
+
+	virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
+
+	void lock();
+	void unlock();
+	void select();
+	void deselect();
+	bool isClicked(sf::RenderWindow&);
+
+	//It doesn't return real position, but its squere
+	sf::Vector2f getPos();
 private:
-	enum Buttons : int
-	{
-		NewTurn = 0,
-		Options
-	};
+	sf::Image& SpriteSheet;
+	sf::Texture Texture;
+	sf::Sprite Sprite;
+	sf::Vector2f Pos, SquereSize;
 
-	sf::RenderWindow Window;
-	sf::Font MainFont;
-	sf::Image SpriteSheet;
-	sf::Vector2f MapSize;
-
-	std::vector<Button> Buttons;
-	std::vector<std::unique_ptr<Star>> Map;
-
-	std::unique_ptr<MsgQueue> Messeges;
-
-	//Main functions
-	void update();
-	void handleEvents();
-	void draw();
-
-	//Draw functions
-	void drawFrame(sf::FloatRect, std::string);
-	void drawMap();
-	void drawStatus();
-	void drawMsgBox();
-
-	//Map functions
-	void generateMap();
+	bool locked = false;
 };

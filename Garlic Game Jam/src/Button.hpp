@@ -35,10 +35,12 @@ public:
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 	void update(const sf::Window& window);
+	void lock();
+	void unlock();
 	bool isClicked();
 private:
 	sf::FloatRect Rect;
 	sf::Text Text;
 
-	bool onMouse = false;
+	bool onMouse = false, locked = false;
 };

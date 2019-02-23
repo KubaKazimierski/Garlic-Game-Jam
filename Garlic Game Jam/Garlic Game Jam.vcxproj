@@ -23,17 +23,22 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MsgQueue.cpp" />
+    <ClCompile Include="src\Star.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Button.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\MsgQueue.hpp" />
+    <ClInclude Include="src\Star.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\LCD_Solid.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\LCD_Solid.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\spritesheet.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

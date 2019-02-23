@@ -55,7 +55,8 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Button::update(const sf::Window& window)
 {
-	if(Rect.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window))))
+	if(Rect.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)))
+		&& !locked)
 	{
 		onMouse = true;
 		Text.setFillColor(sf::Color::Black);
@@ -75,6 +76,16 @@ bool Button::isClicked()
 	}
 
 	return false;
+}
+
+void Button::lock()
+{
+	locked = true;
+}
+
+void Button::unlock()
+{
+	locked = false;
 }
 
 Button::~Button()
