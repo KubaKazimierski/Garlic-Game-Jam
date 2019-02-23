@@ -25,8 +25,11 @@ SOFTWARE.
 #pragma once
 #include "Game.hpp"
 
+const sf::Time Game::ButtonDelay = sf::milliseconds(200);
+
 Game::Game() 
-	: Window{ sf::VideoMode{960, 540}, "Monochrome Space", sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen }
+	: Window{ sf::VideoMode{960, 540},
+	"Monochrome Space", sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen }
 {
 	SpriteSheet.loadFromFile("assets\\spritesheet.png");
 	MainFont.loadFromFile("assets\\LCD_Solid.ttf");
@@ -44,6 +47,9 @@ Game::Game()
 		static_cast<float>(WindowSize.x) - static_cast<float>(WindowSize.x) * 0.4f - 40,
 		60 }, "Next Turn", MainFont });
 
+	SpaceShipTexture.loadFromImage(SpriteSheet, sf::IntRect{0, 0, 16, 16});
+	SpaceShip.setTexture(SpaceShipTexture);
+
 	generateMap();
 }
 
@@ -52,13 +58,14 @@ void Game::start()
 	const sf::Time frameStep = sf::milliseconds(1000/60);
 	sf::Clock MainClock;
 	
-	*Messeges << "Welcome to Monochrome Space!\nEnjoy yourself while playing it!"
+	*Messeges << "Welcome to Monochrome Space!\nYour goal is to earn 10000$.\n"
+		<< "Enjoy yourself while playing it!"
 		<< MsgQueue::flush;
 
 	while(Window.isOpen())
 	{
-		update();
 		handleEvents();
+		update();
 
 		if(MainClock.getElapsedTime() > frameStep)
 		{
@@ -70,19 +77,9 @@ void Game::start()
 
 void Game::update()
 {
-	static sf::Clock ButtonClock;
-	static const sf::Time ButtonDelay = sf::milliseconds(200);
-
 	for(auto& button : Buttons)
 	{
 		button.update(Window);
-	}
-
-	if(Buttons[NewTurn].isClicked())
-	{
-		*Messeges << "Next turn ..." << MsgQueue::flush;
-		Buttons[NewTurn].lock();
-		ButtonClock.restart();
 	}
 
 	if(ButtonClock.getElapsedTime() > ButtonDelay)
@@ -112,6 +109,64 @@ void Game::handleEvents()
 		}
 	}
 
+	if(Buttons[NewTurn].isClicked())
+	{
+		*Messeges << "Next turn ..." << MsgQueue::flush;
+		Buttons[NewTurn].lock();
+		ButtonClock.restart();
+
+		if(--ttime > 0)
+		{
+			for(auto& star : Map)
+			{
+				star->lock();
+			}
+
+			*Messeges << "You need to wait " << ttime << " turn to achive your destination."
+				<< MsgQueue::flush;
+			
+		}
+		else if(tpos != -1)
+		{
+			ppos = tpos;
+			tpos = -1;
+
+			Map.at(ppos)->deselect();
+			for(auto& star : Map)
+			{
+				star->unlock();
+			}
+
+			*Messeges << "You have achived your destination." << MsgQueue::flush;
+		}
+
+			
+	}
+
+	for(size_t i = 0; i < Map.size(); ++i)
+	{
+		if(Map.at(i)->isClicked(Window) 
+			&& ButtonClock.getElapsedTime() > ButtonDelay
+			&& tpos != i)
+		{
+			if(tpos != -1)
+			{
+				Map.at(tpos)->deselect();
+			}
+
+			Map.at(i)->select();
+			tpos = i;
+			ttime = static_cast<int>(ceil(sqrt(pow(Map.at(i)->getPos().x - Map.at(ppos)->getPos().x, 2)
+				+ pow(Map.at(i)->getPos().x - Map.at(ppos)->getPos().y, 2)) / 100));
+
+			*Messeges << "Travel to this star is going to take " << ttime
+				<< " turns." << MsgQueue::flush;
+
+			ButtonClock.restart();
+		}
+	}
+
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
 		Window.close();
@@ -123,6 +178,7 @@ void Game::draw()
 	Window.clear();
 
 	drawMap();
+	drawSpaceShip();
 	drawStatus();
 	drawMsgBox();
 
@@ -184,6 +240,13 @@ void Game::drawStatus()
 		50.f
 	};
 	drawFrame(Rect, "HP");
+
+	sf::RectangleShape Bar;
+	Bar.setSize(sf::Vector2f{ (Rect.width - 30) * (PlayerStats.Hp / PlayerStats.MaxHp), Rect.height - 30 });
+	Bar.setPosition(static_cast<float>(WindowSize.x) * 0.4f + 45.0f, 65.0f);
+	Bar.setFillColor(sf::Color::White);
+
+	Window.draw(Bar);
 }
 
 void Game::drawMsgBox()
@@ -196,6 +259,15 @@ void Game::drawMsgBox()
 	drawFrame(Rect);
 
 	Window.draw(*Messeges);
+}
+
+void Game::drawSpaceShip()
+{
+	auto StarPos = Map.at(ppos)->getPos();
+	auto SpaceShipPos = StarPos + sf::Vector2f{ 18, 2 };
+
+	SpaceShip.setPosition(SpaceShipPos);
+	Window.draw(SpaceShip);
 }
 
 void Game::generateMap()
@@ -211,7 +283,7 @@ void Game::generateMap()
 		for(int j = 0; j < 9; ++j)
 		{
 			Map.push_back(std::make_unique<Star>( SpriteSheet,
-				sf::Vector2f{30 + distributionX(rd) + SquereSize.x * i, 60 + distributionY(rd) + SquereSize.y * j},
+				sf::Vector2f{30 + distributionX(rd) + (SquereSize.x + 5) * i, 60 + distributionY(rd) + (SquereSize.y + 5) * j},
 				SquereSize ));
 		}
 	}

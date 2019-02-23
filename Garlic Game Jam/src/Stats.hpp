@@ -22,57 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Star.hpp"
+#pragma once
 
-Star::Star(sf::Image& spriteSheet, sf::Vector2f pos, sf::Vector2f squereSize) 
-	: SpriteSheet{ spriteSheet }, Pos{ pos }, SquereSize{ squereSize }
+struct Stats
 {
-	Texture.loadFromImage(SpriteSheet, sf::IntRect{ 16, 0, 16, 16 });
-	Sprite.setTexture(Texture);
-	Sprite.setPosition(pos);
-}
-
-void Star::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	target.draw(Sprite, states);
-}
-
-void Star::lock()
-{
-	locked = true;
-}
-
-void Star::unlock()
-{
-	locked = false;
-}
-
-void Star::select()
-{
-	lock();
-	Texture.loadFromImage(SpriteSheet, sf::IntRect{ 32, 0, 16, 16 });
-	Sprite.setTexture(Texture);
-}
-
-void Star::deselect()
-{
-	unlock();
-	Texture.loadFromImage(SpriteSheet, sf::IntRect{ 16, 0, 16, 16 });
-	Sprite.setTexture(Texture);
-}
-
-bool Star::isClicked(sf::RenderWindow& window)
-{
-	return Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)))
-		&& sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)
-		&& !locked;
-}
-
-sf::Vector2f Star::getPos()
-{
-	return Pos;
-}
-
-Star::~Star()
-{
-}
+	unsigned MaxHp = 10,
+		Hp = 10,
+		Money = 100,
+		Attack = 10,
+		Defence = 10,
+		Speed = 1;
+};

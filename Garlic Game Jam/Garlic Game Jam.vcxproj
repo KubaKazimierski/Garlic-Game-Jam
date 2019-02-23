@@ -30,6 +30,7 @@
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\MsgQueue.hpp" />
     <ClInclude Include="src\Star.hpp" />
+    <ClInclude Include="src\Stats.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\LCD_Solid.ttf" />

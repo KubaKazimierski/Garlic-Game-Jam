@@ -39,7 +39,6 @@ public:
 	void deselect();
 	bool isClicked(sf::RenderWindow&);
 
-	//It doesn't return real position, but its squere
 	sf::Vector2f getPos();
 private:
 	sf::Image& SpriteSheet;

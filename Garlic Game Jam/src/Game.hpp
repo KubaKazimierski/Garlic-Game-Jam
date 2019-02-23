@@ -31,6 +31,7 @@ SOFTWARE.
 #include "Button.hpp"
 #include "MsgQueue.hpp"
 #include "Star.hpp"
+#include "Stats.hpp"
 
 class Game
 {
@@ -45,15 +46,26 @@ private:
 		Options
 	};
 
+	static const sf::Time ButtonDelay;
+
 	sf::RenderWindow Window;
 	sf::Font MainFont;
 	sf::Image SpriteSheet;
 	sf::Vector2f MapSize;
+	sf::Sprite SpaceShip;
+	sf::Texture SpaceShipTexture;
+	sf::Clock ButtonClock;
 
 	std::vector<Button> Buttons;
 	std::vector<std::unique_ptr<Star>> Map;
 
 	std::unique_ptr<MsgQueue> Messeges;
+
+	Stats PlayerStats;
+
+	int ppos = 0, 
+	    tpos = -1,
+	    ttime = 0;
 
 	//Main functions
 	void update();
@@ -65,6 +77,7 @@ private:
 	void drawMap();
 	void drawStatus();
 	void drawMsgBox();
+	void drawSpaceShip();
 
 	//Map functions
 	void generateMap();
