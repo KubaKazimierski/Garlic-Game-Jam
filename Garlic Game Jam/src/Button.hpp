@@ -25,27 +25,20 @@ SOFTWARE.
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
-#include <memory>
-#include "Button.hpp"
 
-class Game
+class Button : public sf::Drawable
 {
 public:
-	Game();
-	void start();
-	~Game();
+	Button(sf::FloatRect, std::string, sf::Font&);
+	~Button();
+
+	virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
+
+	void update(const sf::Window& window);
+	bool isClicked();
 private:
-	sf::RenderWindow Window;
-	sf::Font MainFont;
+	sf::FloatRect Rect;
+	sf::Text Text;
 
-	//Main functions
-	void update();
-	void handleEvents();
-	void draw();
-
-	//Draw functions
-	void drawFrame(sf::FloatRect, std::string);
-	void drawMap();
-	void drawStatus();
-	void drawMsgBox();
+	bool onMouse = false;
 };
