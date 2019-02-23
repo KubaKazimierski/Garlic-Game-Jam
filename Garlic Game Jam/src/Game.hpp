@@ -22,15 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _DEBUG
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-#endif
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <string>
 
-#include "Game.hpp"
-
-int main()
+class Game
 {
-	Game game;
-	game.start();
-	return 0;
-}
+public:
+	Game();
+	void start();
+	~Game();
+private:
+	sf::RenderWindow Window;
+	sf::Font MainFont;
+
+	//Main functions
+	void update();
+	void handleEvents();
+	void draw();
+
+	//Draw functions
+	void drawFrame(sf::FloatRect, std::string);
+	void drawMap();
+	void drawStatus();
+	void drawMsgBox();
+};
