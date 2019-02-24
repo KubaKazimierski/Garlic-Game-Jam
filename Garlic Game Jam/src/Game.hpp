@@ -72,7 +72,8 @@ private:
 	    event_variant = -1,
 	    offer[5] = { 0, 0, 0, 0, 0 },
 	    hp_recovery = 0;
-	bool msg_shown = false;
+	bool msg_shown = false,
+	     traveling = false;
 
 	void init();
 	void clear();
@@ -82,12 +83,14 @@ private:
 	void handleEvents();
 	void draw();
 
+	//Update functions
+	void updateSpaceship();
+
 	//Draw functions
 	void drawFrame(sf::FloatRect, std::string);
 	void drawMap();
 	void drawStatus();
 	void drawMsgBox();
-	void drawSpaceShip();
 
 	//Map functions
 	void generateMap();

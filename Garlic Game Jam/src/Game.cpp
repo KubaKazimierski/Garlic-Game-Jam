@@ -25,12 +25,13 @@ SOFTWARE.
 #pragma once
 #include "Game.hpp"
 
-const sf::Time Game::BUTTON_DELAY = sf::milliseconds(250);
+const sf::Time Game::BUTTON_DELAY = sf::milliseconds(300);
 
 Game::Game() 
-	: window{ sf::VideoMode{1960, 1080},
+	: window{ /* sf::VideoMode{980, 540} */ sf::VideoMode::getFullscreenModes().at(0) ,
 	"Monochrome Space", /*sf::Style::Titlebar | sf::Style::Close */ sf::Style::Fullscreen }
 {
+	//Loading assets 
 	spritesheet.loadFromFile("assets\\spritesheet.png");
 	main_font.loadFromFile("assets\\LCD_Solid.ttf");
 
@@ -118,6 +119,13 @@ void Game::start()
 
 void Game::update()
 {
+	updateSpaceship();
+
+	if(tpos == -1)
+	{
+		buttons[NewTurn].lock();
+	}
+
 	for(size_t i = 0; i < buttons.size(); ++i)
 	{
 		if((i == 0 && current_event == None) || (i != 0 && current_event != None))
@@ -165,6 +173,38 @@ void Game::update()
 	}
 }
 
+void Game::updateSpaceship()
+{
+	static float travel_time = 0.0f;
+
+	auto star_pos = map.at(ppos)->getPos();
+	auto spaceship_pos = star_pos + sf::Vector2f{ 18, 2 };
+
+	//Update ship in orbit of star
+	if(ttime == 0)
+	{
+		spaceship.setPosition(spaceship_pos);
+		travel_time = 0.0f;
+	}
+	else if(traveling)
+	{
+		if(travel_time == 0)
+		{
+			travel_time = static_cast<float>(ttime + 1);
+		}
+
+		auto destination_pos = map.at(tpos)->getPos() + sf::Vector2f{ 18, 2 };
+
+		//Interpolate position between two stars
+		sf::Vector2f mov_vector{
+			destination_pos.x - spaceship_pos.x,
+			destination_pos.y - spaceship_pos.y
+		};
+		
+		spaceship.setPosition(mov_vector * (static_cast<float>(travel_time - ttime) / travel_time) + spaceship_pos);
+	}
+}
+
 void Game::handleEvents()
 {
 	sf::Event event;
@@ -198,6 +238,8 @@ void Game::handleEvents()
 
 		if(--ttime > 0)
 		{
+			traveling = true;
+
 			for(auto& star : map)
 			{
 				star->lock();
@@ -226,6 +268,7 @@ void Game::handleEvents()
 		{
 			ppos = tpos;
 			tpos = -1;
+			traveling = false;
 
 			map.at(ppos)->deselect();
 			for(auto& star : map)
@@ -267,8 +310,8 @@ void Game::handleEvents()
 
 			map.at(i)->select();
 			tpos = i;
-			ttime = static_cast<int>(ceil(sqrt(pow(map.at(i)->getPos().x - map.at(ppos)->getPos().x, 2)
-				+ pow(map.at(i)->getPos().y - map.at(ppos)->getPos().y, 2)) / (100 + player_stats.speed)));
+			ttime = static_cast<int>(std::ceil(std::sqrt(std::pow(map.at(i)->getPos().x - map.at(ppos)->getPos().x, 2)
+				+ std::pow(map.at(i)->getPos().y - map.at(ppos)->getPos().y, 2)) / (100 + player_stats.speed)));
 
 			*messeges << "Travel to this star is going to take " << ttime
 				<< " turns." << MsgQueue::flush;
@@ -279,7 +322,19 @@ void Game::handleEvents()
 
 	if(current_event != None)
 	{
+		for(auto& star : map)
+		{
+			star->lock();
+		}
+
 		performEvent();
+	}
+	else
+	{
+		for(auto& star : map)
+		{
+			star->unlock();
+		}
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -334,12 +389,26 @@ void Game::performEvent()
 	{
 		if(buttons[Option1].isClicked())
 		{
-			buyOffer();
-
-			if(event_variant == 2)
+			//Mechanic unique code
+			if(event_variant == 2 && static_cast<int>(player_stats.money) >= offer[0])
 			{
-				player_stats.hp += hp_recovery;
+				if(player_stats.hp != player_stats.max_hp)
+				{
+					player_stats.hp += hp_recovery;
+
+					if(player_stats.hp > static_cast<int>(player_stats.max_hp))
+					{
+						player_stats.hp = player_stats.max_hp;
+					}
+					buyOffer();
+				}
+				else
+				{
+					*messeges << "Your ship is perfectly fine!" << MsgQueue::flush;
+				}
 			}
+			else
+				buyOffer();
 
 			lockButtons();
 			resetEvent();
@@ -519,10 +588,10 @@ void Game::attack()
 
 	if(result < 0)
 	{
-		std::uniform_int_distribution<int> distMoney{ 0, static_cast<int>(player_stats.money) },
-			distDmg{0, static_cast<int>(player_stats.max_hp - 1)};
+		std::uniform_int_distribution<int> dist_money{ 0, static_cast<int>(player_stats.money) },
+			dist_dmg{0, static_cast<int>(player_stats.max_hp - 1)};
 
-		int lostMoney = distMoney(rd), damage = distDmg(rd);
+		int lostMoney = dist_money(rd), damage = dist_dmg(rd);
 
 		*messeges << "You are damaged by enemy!\n"
 			"-- RESULT --\n"
@@ -537,7 +606,7 @@ void Game::attack()
 	}
 	else if(result > 0)
 	{
-		std::uniform_int_distribution<int> dist_money{ 0, 200 };
+		std::uniform_int_distribution<int> dist_money{ 0, 250 };
 
 		int looted_money = dist_money(rd);
 
@@ -593,6 +662,7 @@ void Game::buyOffer()
 		player_stats.money -= offer[0];
 
 		player_stats.max_hp += offer[1];
+		player_stats.hp += offer[1];
 		player_stats.speed += offer[2];
 		player_stats.defense += offer[3];
 		player_stats.attack += offer[4];
@@ -613,13 +683,16 @@ void Game::draw()
 	window.clear();
 
 	drawMap();
-	drawSpaceShip();
+
+	window.draw(spaceship);
+
 	drawStatus();
 	drawMsgBox();
 
 	for(size_t i = 0; i < buttons.size(); ++i)
 	{
-		if((i == 0 && current_event == None) || (i != 0 && current_event != None))
+		if((i == 0 && current_event == None && tpos != -1) 
+			|| (i != 0 && current_event != None))
 			window.draw(buttons.at(i));
 	}
 
@@ -717,15 +790,6 @@ void Game::drawMsgBox()
 	drawFrame(Rect);
 
 	window.draw(*messeges);
-}
-
-void Game::drawSpaceShip()
-{
-	auto star_pos = map.at(ppos)->getPos();
-	auto spaceship_pos = star_pos + sf::Vector2f{ 18, 2 };
-
-	spaceship.setPosition(spaceship_pos);
-	window.draw(spaceship);
 }
 
 void Game::generateMap()
