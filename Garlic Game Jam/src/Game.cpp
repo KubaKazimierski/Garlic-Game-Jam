@@ -69,7 +69,7 @@ void Game::init()
 
 	generateMap();
 
-	*messeges << "Copyright (c) Jakub Kazimierski 2019\nWelcome to Monochrome Space!\n"
+	*messeges << "Copyright (c) 2019 Jakub Kazimierski\nWelcome to Monochrome Space!\n"
 		"   __  ___                   __                        ____                 \n"
 		"  /  |/  /__  ___  ___  ____/ /  _______  __ _  ___   / __/__  ___ ________ \n"
 		" / /|_/ / _ \\/ _ \\/ _ \\/ __/ _ \\/ __/ _ \\/  ' \\/ -_) _\\ \\/ _ \\/ _ `/ __/ -_)\n"
