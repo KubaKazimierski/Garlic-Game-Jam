@@ -46,10 +46,10 @@ public:
 	MsgQueue& operator<<(Manipulator);
 
 private:
-	sf::Font& Font;
-	sf::FloatRect Rect;
-	std::vector<std::string> Messeges;
-	std::stringstream NewMsg;
+	sf::Font& font;
+	sf::FloatRect rect;
+	std::vector<std::string> messeges;
+	std::stringstream new_msg;
 
-	unsigned CharSize;
+	unsigned char_size;
 };

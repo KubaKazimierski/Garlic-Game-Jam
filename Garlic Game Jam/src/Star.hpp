@@ -41,10 +41,10 @@ public:
 
 	sf::Vector2f getPos();
 private:
-	sf::Image& SpriteSheet;
-	sf::Texture Texture;
-	sf::Sprite Sprite;
-	sf::Vector2f Pos, SquereSize;
+	sf::Image& spritesheet;
+	sf::Texture texture;
+	sf::Sprite sprite;
+	sf::Vector2f pos, squere_size;
 
 	bool locked = false;
 };

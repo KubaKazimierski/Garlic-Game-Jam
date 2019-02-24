@@ -25,59 +25,59 @@ SOFTWARE.
 #include "Button.hpp"
 
 Button::Button(sf::FloatRect Rect, std::string name, sf::Font& font) 
-	: Rect{ Rect }, Text{ name, font, static_cast<unsigned>(Rect.height * 0.3) }
+	: rect{ Rect }, text{ name, font, static_cast<unsigned>(Rect.height * 0.3) }
 {
-	Text.setPosition(Rect.left + Rect.width / 2 - Text.getGlobalBounds().width / 2,
-		Rect.top + Rect.height / 2 - Text.getGlobalBounds().height);
+	text.setPosition(Rect.left + Rect.width / 2 - text.getGlobalBounds().width / 2,
+		Rect.top + Rect.height / 2 - text.getGlobalBounds().height);
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	//Frame itself
-	sf::RectangleShape Frame{ sf::Vector2f{Rect.width, Rect.height} };
-	if(!onMouse)
+	sf::RectangleShape frame{ sf::Vector2f{rect.width, rect.height} };
+	if(!on_mouse)
 	{
-		Frame.setPosition(Rect.left, Rect.top);
-		Frame.setFillColor(sf::Color::White);
+		frame.setPosition(rect.left, rect.top);
+		frame.setFillColor(sf::Color::White);
 
-		target.draw(Frame, states);
+		target.draw(frame, states);
 	}
 
 	//Space inside of it
-	Frame.setSize(sf::Vector2f{ Rect.width - 10, Rect.height - 10 });
-	Frame.setPosition(Rect.left + 5, Rect.top + 5);
-	Frame.setFillColor((onMouse ? sf::Color::White : sf::Color::Black));
+	frame.setSize(sf::Vector2f{ rect.width - 10, rect.height - 10 });
+	frame.setPosition(rect.left + 5, rect.top + 5);
+	frame.setFillColor((on_mouse ? sf::Color::White : sf::Color::Black));
 
-	target.draw(Frame, states);
+	target.draw(frame, states);
 
-	target.draw(Text, states);
+	target.draw(text, states);
 }
 
 void Button::update(const sf::Window& window)
 {
-	if(Rect.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)))
+	if(rect.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)))
 		&& !locked)
 	{
-		onMouse = true;
-		Text.setFillColor(sf::Color::Black);
+		on_mouse = true;
+		text.setFillColor(sf::Color::Black);
 	}
 	else
 	{
-		onMouse = false;
-		Text.setFillColor(sf::Color::White);
+		on_mouse = false;
+		text.setFillColor(sf::Color::White);
 	}
 }
 
 void Button::setText(std::string name)
 {
-	Text.setString(name);
-	Text.setPosition(Rect.left + Rect.width / 2 - Text.getGlobalBounds().width / 2,
-		Rect.top + Rect.height / 2 - Text.getGlobalBounds().height);
+	text.setString(name);
+	text.setPosition(rect.left + rect.width / 2 - text.getGlobalBounds().width / 2,
+		rect.top + rect.height / 2 - text.getGlobalBounds().height);
 }
 
 bool Button::isClicked()
 {
-	if(onMouse && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !locked)
+	if(on_mouse && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !locked)
 	{
 		return true;
 	}

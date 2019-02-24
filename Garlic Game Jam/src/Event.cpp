@@ -24,25 +24,38 @@ SOFTWARE.
 
 #include "Event.hpp"
 
-const std::vector<std::string> TravelEvents = {
-	"You are attacked by pirates!",
-	"You are attacked by space amoeba!",
+static std::string attackOf(std::string attacker)
+{
+	return std::string("You are attacked by ") + attacker + "!";
+}
+
+const std::vector<std::string> TRAVEL_EVENTS = {
+	attackOf("pirates"),
+	attackOf("space amoeba"),
+	attackOf("hostile mining drones"),
+	attackOf("swarm of space insectioids"),
+	attackOf("living crystals"),
+	attackOf("garlic worshipers"),
 	"Big asteroid is in front of you!"
 };
 
-const std::vector<std::string> PlanetEvents = {
-	"You are attacked by a sand worm!",
-	"You are attacked by a enormous sloth!",
+const std::vector<std::string> PLANET_EVENTS = {
+	attackOf("a sand worm"),
+	attackOf("a enormous sloth"),
+	attackOf("a giagantic pigeon"),
+	attackOf("a hostile garlic like creature"),
+	attackOf("a zoophagous plant"),
+	attackOf("primitive natives"),
 	"Giant is going to crash you w their foot!"
 };
 
-const std::vector<std::string> Shops = {
+const std::vector<std::string> SHOPS = {
 	"Welcome to the civilian shop!",
 	"Welcome to the military shop!",
 	"Welcome to the mechanic!"
 };
 
-const std::vector<std::string> Merchants = {
+const std::string MERCHANT = {
 	"Merchant: It is uncommon to meet living soul in this area.\n"
 	"          Do you want to take a look at my offer?"
 };

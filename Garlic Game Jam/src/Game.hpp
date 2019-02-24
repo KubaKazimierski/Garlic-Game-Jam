@@ -48,31 +48,31 @@ private:
 		Option2
 	};
 
-	static const sf::Time ButtonDelay;
+	static const sf::Time BUTTON_DELAY;
 
-	sf::RenderWindow Window;
-	sf::Font MainFont;
-	sf::Image SpriteSheet;
-	sf::Vector2f MapSize;
-	sf::Sprite SpaceShip;
-	sf::Texture SpaceShipTexture;
-	sf::Clock ButtonClock;
+	sf::RenderWindow window;
+	sf::Font main_font;
+	sf::Image spritesheet;
+	sf::Vector2f map_size;
+	sf::Sprite spaceship;
+	sf::Texture spaceship_texture;
+	sf::Clock button_clock;
 
-	std::vector<Button> Buttons;
-	std::vector<std::unique_ptr<Star>> Map;
+	std::vector<Button> buttons;
+	std::vector<std::unique_ptr<Star>> map;
 
-	std::unique_ptr<MsgQueue> Messeges;
+	std::unique_ptr<MsgQueue> messeges;
 
-	Stats PlayerStats;
-	Event CurrentEvent = None;
+	Stats player_stats;
+	Event current_event = None;
 
 	int ppos = 0, 
 	    tpos = -1,
 	    ttime = 0,
-	    EventVariant = -1,
-	    Offer[5] = { 0, 0, 0, 0, 0 },
-	    HPrecovery = 0;
-	bool MsgShown = false;
+	    event_variant = -1,
+	    offer[5] = { 0, 0, 0, 0, 0 },
+	    hp_recovery = 0;
+	bool msg_shown = false;
 
 	void init();
 	void clear();

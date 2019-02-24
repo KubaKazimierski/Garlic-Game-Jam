@@ -26,10 +26,10 @@ SOFTWARE.
 
 struct Stats
 {
-	int Hp = 10;
-	unsigned MaxHp = 10,
-		Money = 100,
-		Attack = 10,
-		Defense = 10,
-		Speed = 1;
+	int hp = 10;
+	unsigned max_hp = 10,
+		money = 100,
+		attack = 10,
+		defense = 10,
+		speed = 1;
 };

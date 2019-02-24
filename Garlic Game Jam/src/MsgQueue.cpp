@@ -26,27 +26,27 @@ SOFTWARE.
 
 const MsgQueue::Manipulator MsgQueue::flush;
 
-MsgQueue::MsgQueue(sf::FloatRect rect, sf::Font& font, unsigned charSize)
-	: Rect{ rect }, Font{ font }, CharSize{ charSize }
+MsgQueue::MsgQueue(sf::FloatRect rect, sf::Font& font, unsigned char_size)
+	: rect{ rect }, font{ font }, char_size{ char_size }
 {
 }
 
 void MsgQueue::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	sf::Text text{"", Font, CharSize};
-	text.setPosition(Rect.left, Rect.top);
+	sf::Text text{"", font, char_size};
+	text.setPosition(rect.left, rect.top);
 
-	for(size_t i = 0; i < Messeges.size(); ++i)
+	for(size_t i = 0; i < messeges.size(); ++i)
 	{
-		text.setPosition(text.getPosition().x, text.getPosition().y + CharSize);
-		text.setString(Messeges.at(i));
+		text.setPosition(text.getPosition().x, text.getPosition().y + char_size);
+		text.setString(messeges.at(i));
 		target.draw(text, states);
 	}
 }
 
 void MsgQueue::clear()
 {
-	Messeges.clear();
+	messeges.clear();
 }
 
 MsgQueue::~MsgQueue()
@@ -55,41 +55,41 @@ MsgQueue::~MsgQueue()
 
 MsgQueue& MsgQueue::operator<<(std::string string)
 {
-	NewMsg << string;
+	new_msg << string;
 	return *this;
 }
 
 MsgQueue& MsgQueue::operator<<(int n)
 {
-	NewMsg << n;
+	new_msg << n;
 	return *this;
 }
 
 MsgQueue& MsgQueue::operator<<(Manipulator)
 {
-	NewMsg << '\n';
+	new_msg << '\n';
 
 	std::string tmp;
 
 	do
 	{
-		std::getline(NewMsg, tmp);
+		std::getline(new_msg, tmp);
 
-		if(tmp.size() >= Rect.width)
+		if(tmp.size() >= rect.width)
 		{
-			tmp.erase(tmp.begin() + static_cast<int>(Rect.width) - 1, tmp.end());
+			tmp.erase(tmp.begin() + static_cast<int>(rect.width) - 1, tmp.end());
 		}
 
 		if(tmp != "")
-			Messeges.push_back(tmp);
+			messeges.push_back(tmp);
 
-		if(Messeges.size() >= Rect.height)
+		if(messeges.size() >= rect.height)
 		{
-			Messeges.erase(Messeges.begin());
+			messeges.erase(messeges.begin());
 		}
 	}
-	while(!NewMsg.eof());
-	NewMsg.clear();
+	while(!new_msg.eof());
+	new_msg.clear();
 	
 
 	return *this;

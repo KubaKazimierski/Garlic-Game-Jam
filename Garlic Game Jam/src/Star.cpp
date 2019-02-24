@@ -25,16 +25,16 @@ SOFTWARE.
 #include "Star.hpp"
 
 Star::Star(sf::Image& spriteSheet, sf::Vector2f pos, sf::Vector2f squereSize) 
-	: SpriteSheet{ spriteSheet }, Pos{ pos }, SquereSize{ squereSize }
+	: spritesheet{ spriteSheet }, pos{ pos }, squere_size{ squereSize }
 {
-	Texture.loadFromImage(SpriteSheet, sf::IntRect{ 16, 0, 16, 16 });
-	Sprite.setTexture(Texture);
-	Sprite.setPosition(pos);
+	texture.loadFromImage(spritesheet, sf::IntRect{ 16, 0, 16, 16 });
+	sprite.setTexture(texture);
+	sprite.setPosition(pos);
 }
 
 void Star::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(Sprite, states);
+	target.draw(sprite, states);
 }
 
 void Star::lock()
@@ -50,27 +50,27 @@ void Star::unlock()
 void Star::select()
 {
 	lock();
-	Texture.loadFromImage(SpriteSheet, sf::IntRect{ 32, 0, 16, 16 });
-	Sprite.setTexture(Texture);
+	texture.loadFromImage(spritesheet, sf::IntRect{ 32, 0, 16, 16 });
+	sprite.setTexture(texture);
 }
 
 void Star::deselect()
 {
 	unlock();
-	Texture.loadFromImage(SpriteSheet, sf::IntRect{ 16, 0, 16, 16 });
-	Sprite.setTexture(Texture);
+	texture.loadFromImage(spritesheet, sf::IntRect{ 16, 0, 16, 16 });
+	sprite.setTexture(texture);
 }
 
 bool Star::isClicked(sf::RenderWindow& window)
 {
-	return Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)))
+	return sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)))
 		&& sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)
 		&& !locked;
 }
 
 sf::Vector2f Star::getPos()
 {
-	return Pos;
+	return pos;
 }
 
 Star::~Star()

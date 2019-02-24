@@ -36,7 +36,7 @@ enum Event : int
 	GameWon
 };
 
-extern const std::vector<std::string> TravelEvents;
-extern const std::vector<std::string> PlanetEvents;
-extern const std::vector<std::string> Shops;
-extern const std::vector<std::string> Merchants;
+extern const std::vector<std::string> TRAVEL_EVENTS;
+extern const std::vector<std::string> PLANET_EVENTS;
+extern const std::vector<std::string> SHOPS;
+extern const std::string MERCHANT;

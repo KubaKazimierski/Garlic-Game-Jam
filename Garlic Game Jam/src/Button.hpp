@@ -40,8 +40,8 @@ public:
 	void setText(std::string);
 	bool isClicked();
 private:
-	sf::FloatRect Rect;
-	sf::Text Text;
+	sf::FloatRect rect;
+	sf::Text text;
 
-	bool onMouse = false, locked = false;
+	bool on_mouse = false, locked = false;
 };
