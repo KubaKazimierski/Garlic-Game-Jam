@@ -28,8 +28,8 @@ SOFTWARE.
 const sf::Time Game::BUTTON_DELAY = sf::milliseconds(300);
 
 Game::Game() 
-	: window{ /* sf::VideoMode{980, 540} */ sf::VideoMode::getFullscreenModes().at(0) ,
-	"Monochrome Space", /*sf::Style::Titlebar | sf::Style::Close */ sf::Style::Fullscreen }
+	: window{ /* sf::VideoMode{1960, 1080} */ sf::VideoMode::getFullscreenModes().at(0),
+	"Monochrome Space", /*sf::Style::Titlebar | sf::Style::Close*/ sf::Style::Fullscreen }
 {
 	//Loading assets 
 	spritesheet.loadFromFile("assets\\spritesheet.png");
@@ -69,7 +69,7 @@ void Game::init()
 
 	generateMap();
 
-	*messeges << "Welcome to Monochrome Space!\n"
+	*messeges << "Copyright (c) Jakub Kazimierski 2019\nWelcome to Monochrome Space!\n"
 		"   __  ___                   __                        ____                 \n"
 		"  /  |/  /__  ___  ___  ____/ /  _______  __ _  ___   / __/__  ___ ________ \n"
 		" / /|_/ / _ \\/ _ \\/ _ \\/ __/ _ \\/ __/ _ \\/  ' \\/ -_) _\\ \\/ _ \\/ _ `/ __/ -_)\n"
@@ -502,7 +502,7 @@ void Game::civilianShop()
 
 void Game::militaryShop()
 {
-	for(int i = 0; i < 2; ++i)
+	for(int i = 0; i < 5; ++i)
 	{
 		offer[i] = 0;
 	}

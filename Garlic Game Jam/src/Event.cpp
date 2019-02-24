@@ -36,6 +36,8 @@ const std::vector<std::string> TRAVEL_EVENTS = {
 	attackOf("swarm of space insectioids"),
 	attackOf("living crystals"),
 	attackOf("garlic worshipers"),
+	attackOf("swarm of nanites"),
+	attackOf("a space squid"),
 	"Big asteroid is in front of you!"
 };
 
@@ -46,7 +48,10 @@ const std::vector<std::string> PLANET_EVENTS = {
 	attackOf("a hostile garlic like creature"),
 	attackOf("a zoophagous plant"),
 	attackOf("primitive natives"),
-	"Giant is going to crash you w their foot!"
+	attackOf("robots"),
+	attackOf("onion cultists"),
+	attackOf("bountyhunters"),
+	"Giant is going to crash you with their foot!"
 };
 
 const std::vector<std::string> SHOPS = {
